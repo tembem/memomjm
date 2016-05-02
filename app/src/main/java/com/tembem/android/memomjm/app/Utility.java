@@ -26,6 +26,7 @@ import java.util.Date;
 
 public class Utility {
     public final static String MJM_API_URL = "https://mjm-yamaha.com/api/";
+    public final static String MJM_IMAGE_URL = "https://mjm-yamaha.com/files/";
 
     public static String getPreferredLocation(Context context) {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);

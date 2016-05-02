@@ -29,6 +29,7 @@ import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.ShareActionProvider;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -120,9 +121,6 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
                 startActivityForResult(intent, 110);
             }
         });
-
-        ImageView image1 = (ImageView)rootView.findViewById(R.id.thumbnail_image1);
-        loadImage("http://192.168.1.3/androiduploadbasic/uploads/101.jpg", image1);
 
         return rootView;
     }
@@ -223,6 +221,13 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
 
             String engine = data.getString(COL_MEMO_ENGINE);
             mEngineView.setText(engine);
+
+            String image1File = data.getString(COL_MEMO_IMAGE1);
+            if (image1File != null) {
+                ImageView image1 = (ImageView)getActivity().findViewById(R.id.thumbnail_image1);
+                Log.d(LOG_TAG, "Image file path: " + Utility.MJM_IMAGE_URL + image1File);
+                loadImage(Utility.MJM_IMAGE_URL + image1File, image1);
+            }
 
             // We still need this for the share intent
             mForecast = String.format("%s - %s - %s - %s", dateText, description, chasis, engine);

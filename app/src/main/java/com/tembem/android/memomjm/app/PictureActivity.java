@@ -44,7 +44,7 @@ public class PictureActivity extends AppCompatActivity {
     ProgressDialog dialog = null;
 
 
-    String upLoadServerUri = Utility.MJM_API_URL + "upload";
+    String upLoadServerUri = Utility.MJM_API_URL + "uploadmemo1";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
