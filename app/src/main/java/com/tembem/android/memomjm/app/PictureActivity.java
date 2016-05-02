@@ -17,6 +17,8 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.tembem.android.memomjm.app.data.MemoContract;
+
 import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -101,7 +103,9 @@ public class PictureActivity extends AppCompatActivity {
     }
 
     public int uploadFile(String sourceFileUri) {
-        String fileName = sourceFileUri;
+        // Inject receiptId to filename, then php server parse with correct pattern
+        String receiptId = MemoContract.MemoEntry.getReceiptIdFromUri(mUri);
+        String fileName = receiptId + sourceFileUri.substring(sourceFileUri.lastIndexOf("."));
 
         HttpURLConnection conn = null;
         DataOutputStream dos = null;
