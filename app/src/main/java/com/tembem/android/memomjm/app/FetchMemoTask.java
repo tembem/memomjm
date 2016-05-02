@@ -162,7 +162,7 @@ public class FetchMemoTask extends AsyncTask<String, Void, Void> {
         if (params.length == 0) {
             return null;
         }
-        String locationQuery = params[0];
+        String query = params[0];
 
         // These two need to be declared outside the try/catch
         // so that they can be closed in the finally block.
@@ -183,7 +183,7 @@ public class FetchMemoTask extends AsyncTask<String, Void, Void> {
             final String RECEIPT_PARAM = "q";
 
             Uri builtUri = Uri.parse(FORECAST_BASE_URL).buildUpon()
-                    .appendQueryParameter(RECEIPT_PARAM, receiptIdParam)
+                    .appendQueryParameter(RECEIPT_PARAM, query)
                     .build();
 
             URL url = new URL(builtUri.toString());
@@ -216,7 +216,7 @@ public class FetchMemoTask extends AsyncTask<String, Void, Void> {
                 return null;
             }
             forecastJsonStr = buffer.toString();
-            getMemoDataFromJson(forecastJsonStr, locationQuery);
+            getMemoDataFromJson(forecastJsonStr, query);
         } catch (IOException e) {
             Log.e(LOG_TAG, "Error ", e);
             // If the code didn't successfully get the weather data, there's no point in attempting

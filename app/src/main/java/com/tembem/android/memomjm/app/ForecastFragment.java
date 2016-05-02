@@ -22,6 +22,8 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
+import android.support.v4.view.MenuItemCompat;
+import android.support.v7.widget.SearchView;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -30,6 +32,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.tembem.android.memomjm.app.data.MemoContract;
 
@@ -98,6 +101,25 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.forecastfragment, menu);
+
+        MenuItem searchItem = menu.findItem(R.id.search);
+        final SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener(){
+
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                //Toast.makeText(getActivity(), "Search for: " + query, Toast.LENGTH_SHORT).show();
+                updateMemo(query);
+                searchView.clearFocus();
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+
+                return false;
+            }
+        });
     }
 
     @Override
@@ -107,7 +129,7 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
         if (id == R.id.action_refresh) {
-            updateMemo();
+            updateMemo("");
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -168,14 +190,15 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
 
     // since we read the location when we create the loader, all we need to do is restart things
     void onLocationChanged( ) {
-        updateMemo();
+        updateMemo("");
         getLoaderManager().restartLoader(FORECAST_LOADER, null, this);
     }
 
-    private void updateMemo() {
-        FetchMemoTask weatherTask = new FetchMemoTask(getActivity());
-        String location = Utility.getPreferredLocation(getActivity());
-        weatherTask.execute(location);
+    private void updateMemo(String keyword) {
+        if (keyword != "") {
+            FetchMemoTask weatherTask = new FetchMemoTask(getActivity());
+            weatherTask.execute(keyword);
+        }
     }
 
     @Override
