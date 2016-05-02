@@ -3,7 +3,9 @@ package com.tembem.android.memomjm.app;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
@@ -23,6 +25,8 @@ import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.lang.ref.WeakReference;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -39,7 +43,8 @@ public class PictureActivity extends AppCompatActivity {
     int serverResponseCode = 0;
     ProgressDialog dialog = null;
 
-    String upLoadServerUri = "http://192.168.1.3/androiduploadbasic/upload.php";
+
+    String upLoadServerUri = Utility.MJM_API_URL + "upload";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,6 +80,8 @@ public class PictureActivity extends AppCompatActivity {
 
         Bundle extras = getIntent().getExtras();
         mUri = (Uri)extras.get(DetailFragment.DETAIL_URI);
+
+
     }
 
     @Override
@@ -235,4 +242,6 @@ public class PictureActivity extends AppCompatActivity {
 
         return true;
     }
+
+
 }

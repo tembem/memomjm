@@ -150,7 +150,7 @@ public class MemoProvider extends ContentProvider {
 
         switch (match) {
             case MEMO: {
-                normalizeDate(values);
+                //normalizeDate(values);
                 long _id = db.insert(MemoContract.MemoEntry.TABLE_NAME, null, values);
                 if ( _id > 0 )
                     returnUri = MemoContract.MemoEntry.buildMemoUri(_id);
@@ -187,13 +187,13 @@ public class MemoProvider extends ContentProvider {
         return rowsDeleted;
     }
 
-    private void normalizeDate(ContentValues values) {
-        // normalize the date value
-        if (values.containsKey(MemoContract.MemoEntry.COLUMN_DATE)) {
-            long dateValue = values.getAsLong(MemoContract.MemoEntry.COLUMN_DATE);
-            values.put(MemoContract.MemoEntry.COLUMN_DATE, MemoContract.normalizeDate(dateValue));
-        }
-    }
+//    private void normalizeDate(ContentValues values) {
+//        // normalize the date value
+//        if (values.containsKey(MemoContract.MemoEntry.COLUMN_DATE)) {
+//            long dateValue = values.getAsLong(MemoContract.MemoEntry.COLUMN_DATE);
+//            values.put(MemoContract.MemoEntry.COLUMN_DATE, MemoContract.normalizeDate(dateValue));
+//        }
+//    }
 
     @Override
     public int update(
@@ -204,7 +204,7 @@ public class MemoProvider extends ContentProvider {
 
         switch (match) {
             case MEMO:
-                normalizeDate(values);
+                //normalizeDate(values);
                 rowsUpdated = db.update(MemoContract.MemoEntry.TABLE_NAME, values, selection,
                         selectionArgs);
                 break;
@@ -230,7 +230,7 @@ public class MemoProvider extends ContentProvider {
                 int returnCount = 0;
                 try {
                     for (ContentValues value : values) {
-                        normalizeDate(value);
+                        //normalizeDate(value);
                         long _id = db.insert(MemoContract.MemoEntry.TABLE_NAME, null, value);
                         if (_id != -1) {
                             returnCount++;

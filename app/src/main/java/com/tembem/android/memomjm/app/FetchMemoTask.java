@@ -112,7 +112,7 @@ public class FetchMemoTask extends AsyncTask<String, Void, Void> {
                 String chasis;
                 String image1;
                 int receiptId;
-                int date;
+                String date;
 
                 // Get the JSON object representing the day
                 JSONObject dayForecast = memoArray.getJSONObject(i);
@@ -120,7 +120,7 @@ public class FetchMemoTask extends AsyncTask<String, Void, Void> {
                 // Cheating to convert this to UTC time, which is what we want anyhow
                 dateTime = dayTime.setJulianDay(julianStartDay+i);
 
-                date = dayForecast.getInt(OWM_DATE);
+                date = dayForecast.getString(OWM_DATE);
                 description = dayForecast.getString(OWM_CUSTOMER);
                 engine = dayForecast.getString(OWM_ENGINE);
                 chasis = dayForecast.getString(OWM_CHASIS);
@@ -172,15 +172,15 @@ public class FetchMemoTask extends AsyncTask<String, Void, Void> {
         // Will contain the raw JSON response as a string.
         String forecastJsonStr = null;
 
-        String receiptIdParam = "123456";
+        String receiptIdParam = "123";
 
         try {
             // Construct the URL for the OpenWeatherMap query
             // Possible parameters are avaiable at OWM's forecast API page, at
             final String FORECAST_BASE_URL =
-                    "http://192.168.1.3/memo/api.php?";
+                    Utility.MJM_API_URL + "memo?";
 
-            final String RECEIPT_PARAM = "receiptid";
+            final String RECEIPT_PARAM = "q";
 
             Uri builtUri = Uri.parse(FORECAST_BASE_URL).buildUpon()
                     .appendQueryParameter(RECEIPT_PARAM, receiptIdParam)

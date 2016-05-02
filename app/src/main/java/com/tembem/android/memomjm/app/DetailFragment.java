@@ -15,9 +15,13 @@
  */
 package com.tembem.android.memomjm.app;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
@@ -34,9 +38,14 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.tembem.android.memomjm.app.data.MemoContract;
 import com.tembem.android.memomjm.app.data.MemoContract.MemoEntry;
+
+import java.io.InputStream;
+import java.lang.ref.WeakReference;
+import java.net.URL;
 
 /**
  * A placeholder fragment containing a simple view.
@@ -51,6 +60,8 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
     private ShareActionProvider mShareActionProvider;
     private String mForecast;
     private Uri mUri;
+    ProgressDialog dialog2 = null;
+    private Bitmap bitmap;
 
     private static final int DETAIL_LOADER = 0;
 
@@ -109,6 +120,9 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
                 startActivityForResult(intent, 110);
             }
         });
+
+        ImageView image1 = (ImageView)rootView.findViewById(R.id.thumbnail_image1);
+        loadImage("http://192.168.1.3/androiduploadbasic/uploads/101.jpg", image1);
 
         return rootView;
     }
@@ -193,8 +207,8 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
             //mIconView.setImageResource(Utility.getArtResourceForWeatherCondition(weatherId));
 
             // Read date from cursor and update views for day of week and date
-            long date = data.getLong(COL_MEMO_DATE);
-            String dateText = Utility.getFormattedMonthDay(getActivity(), date);
+            String dateText = data.getString(COL_MEMO_DATE);
+            //String dateText = Utility.getFormattedMonthDay(getActivity(), date);
             mDateView.setText(dateText);
 
             // Read description from cursor and update view
@@ -221,4 +235,46 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) { }
+
+    public void loadImage(String url, ImageView imageView) {
+        BitmapWorkerTask task = new BitmapWorkerTask(imageView);
+        task.execute(url);
+    }
+
+    private class BitmapWorkerTask extends AsyncTask<String, String, Bitmap> {
+        private final WeakReference<ImageView> imageViewReference;
+
+        public BitmapWorkerTask(ImageView imageView) {
+            // Use a WeakReference to ensure the ImageView can be garbage collected
+            imageViewReference = new WeakReference<ImageView>(imageView);
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            dialog2 = new ProgressDialog(getActivity());
+            dialog2.setMessage("Loading Image ....");
+            dialog2.show();
+        }
+        protected Bitmap doInBackground(String... args) {
+            try {
+                bitmap = BitmapFactory.decodeStream((InputStream)new URL(args[0]).getContent());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return bitmap;
+        }
+        protected void onPostExecute(Bitmap image) {
+            if(imageViewReference != null && image != null) {
+                final ImageView imageView = imageViewReference.get();
+                if (imageView != null) {
+                    imageView.setImageBitmap(image);
+                }
+                dialog2.dismiss();
+            } else {
+                dialog2.dismiss();
+                Toast.makeText(getActivity(), "Image Does Not exist or Network Error", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
 }
