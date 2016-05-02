@@ -6,6 +6,8 @@
     android:layout_height="wrap_content"
     android:gravity="center_vertical"
     android:minHeight="?android:attr/listPreferredItemHeight"
+    android:paddingTop="5dp"
+    android:paddingBottom="5dp"
     android:orientation="horizontal"
     android:background="@drawable/touch_selector">
 
@@ -28,41 +30,26 @@
         android:orientation="vertical">
 
         <TextView
-            android:id="@+id/list_item_date_textview"
+            android:id="@+id/list_item_engine_textview"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="sans-serif-condensed"
-            android:textSize="20sp"/>
+            android:textAppearance="?android:textAppearanceLarge"/>
 
         <TextView
             android:id="@+id/list_item_forecast_textview"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="sans-serif-condensed"
-            android:textAppearance="?android:textAppearanceSmall"/>
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="5"
-        android:layout_gravity="center"
-        android:orientation="vertical">
+            android:textAppearance="?android:textAppearanceMedium"/>
 
         <TextView
-            android:id="@+id/list_item_engine_textview"
+            android:id="@+id/list_item_date_textview"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:fontFamily="sans-serif-condensed"
-            android:textAppearance="?android:textAppearanceLarge"/>
-
-        <TextView
-            android:id="@+id/list_item_chasis_textview"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
             android:fontFamily="sans-serif-condensed"
             android:textAppearance="?android:textAppearanceSmall"/>
+
+
     </LinearLayout>
 </LinearLayout>

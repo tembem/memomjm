@@ -11,35 +11,36 @@
         android:orientation="vertical"
         android:padding="16dp">
 
-        <!-- Header: Day, Date -->
+        <TextView
+            android:id="@+id/detail_engine_textview"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:textColor="@color/black"
+            android:textAppearance="?android:textAppearanceMedium" />
+
         <TextView
             android:fontFamily="sans-serif-condensed"
             android:id="@+id/detail_customer_textview"
             android:layout_height="wrap_content"
             android:layout_width="wrap_content"
             android:textColor="@color/black"
-            android:textSize="24sp" />
+            android:textAppearance="?android:textAppearanceMedium" />
 
         <TextView
             android:fontFamily="sans-serif-condensed"
             android:id="@+id/detail_date_textview"
             android:layout_height="wrap_content"
             android:layout_width="wrap_content"
-            android:textColor="@color/grey_700"
-            android:textSize="16sp" />
-
-        <TextView
-            android:id="@+id/detail_engine_textview"
-            android:layout_height="wrap_content"
-            android:layout_width="match_parent"
-            android:textAppearance="?android:textAppearanceLarge" />
+            android:textColor="@color/black"
+            android:textAppearance="?android:textAppearanceMedium" />
 
         <TextView
             android:id="@+id/detail_chasis_textview"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
             android:layout_width="match_parent"
-            android:textAppearance="?android:textAppearanceLarge" />
+            android:textColor="@color/black"
+            android:textAppearance="?android:textAppearanceMedium" />
 
         <LinearLayout
             android:layout_width="match_parent"

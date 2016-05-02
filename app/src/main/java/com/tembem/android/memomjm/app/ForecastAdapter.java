@@ -28,14 +28,14 @@ public class ForecastAdapter extends CursorAdapter {
         public final TextView dateView;
         public final TextView descriptionView;
         public final TextView engineView;
-        public final TextView chasisView;
+        //public final TextView chasisView;
 
         public ViewHolder(View view) {
             iconView = (ImageView) view.findViewById(R.id.list_item_icon);
             dateView = (TextView) view.findViewById(R.id.list_item_date_textview);
             descriptionView = (TextView) view.findViewById(R.id.list_item_forecast_textview);
             engineView = (TextView) view.findViewById(R.id.list_item_engine_textview);
-            chasisView = (TextView) view.findViewById(R.id.list_item_chasis_textview);
+            //chasisView = (TextView) view.findViewById(R.id.list_item_chasis_textview);
         }
     }
 
@@ -98,8 +98,8 @@ public class ForecastAdapter extends CursorAdapter {
         String engine = cursor.getString(ForecastFragment.COL_MEMO_ENGINE);
         viewHolder.engineView.setText(engine);
 
-        String chasis = cursor.getString(ForecastFragment.COL_MEMO_CHASIS);
-        viewHolder.chasisView.setText(chasis);
+//        String chasis = cursor.getString(ForecastFragment.COL_MEMO_CHASIS);
+//        viewHolder.chasisView.setText(chasis);
 
         //String image1 = cursor.getString(ForecastFragment.COL_MEMO_IMAGE1);
         //viewHolder.engineViewView.setText(image1);
