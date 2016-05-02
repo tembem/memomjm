@@ -41,5 +41,11 @@
             android:layout_width="match_parent"
             android:textAppearance="?android:textAppearanceLarge" />
 
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Show Image 1"
+            android:id="@+id/button_show_image1" />
+
     </LinearLayout>
 </ScrollView>

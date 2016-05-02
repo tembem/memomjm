@@ -31,6 +31,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -98,6 +99,25 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
         mCustomerView = (TextView) rootView.findViewById(R.id.detail_customer_textview);
         mEngineView = (TextView) rootView.findViewById(R.id.detail_engine_textview);
         mChasisView = (TextView) rootView.findViewById(R.id.detail_chasis_textview);
+
+        Button button1 = (Button)rootView.findViewById(R.id.button_show_image1);
+        button1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), PictureActivity.class);
+                intent.putExtra("receipt_id", 102);
+                getActivity().startActivity(intent);
+            }
+        });
+
+//        Uri uri = mUri;
+//        if (null != uri) {
+//            String receiptId = MemoContract.MemoEntry.getReceiptIdFromUri(uri);
+//            Uri updatedUri = MemoContract.MemoEntry.buildMemoWithReceiptId(receiptId);
+//            mUri = updatedUri;
+//            getLoaderManager().restartLoader(DETAIL_LOADER, null, this);
+//        }
+
         return rootView;
     }
 
