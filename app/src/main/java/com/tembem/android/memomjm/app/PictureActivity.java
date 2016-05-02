@@ -9,6 +9,8 @@ import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -29,6 +31,7 @@ public class PictureActivity extends AppCompatActivity {
     private ImageView imageView;
     String imagePath;
     private Bitmap bitmap;
+    private Uri mUri;
 
     private int PICK_IMAGE_REQUEST = 1;
     int serverResponseCode = 0;
@@ -67,6 +70,9 @@ public class PictureActivity extends AppCompatActivity {
                 }).start();
             }
         });
+
+        Bundle extras = getIntent().getExtras();
+        mUri = (Uri)extras.get(DetailFragment.DETAIL_URI);
     }
 
     @Override
@@ -205,5 +211,24 @@ public class PictureActivity extends AppCompatActivity {
             dialog.dismiss();
             return serverResponseCode;
         }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        //getMenuInflater().inflate(R.menu.menu_main, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle back button on toolbar
+
+        Intent i = new Intent();
+        i.putExtra(DetailFragment.DETAIL_URI, mUri);
+        setResult(RESULT_OK, i);
+        finish();
+
+        return true;
     }
 }

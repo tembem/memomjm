@@ -105,20 +105,22 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), PictureActivity.class);
-                intent.putExtra("receipt_id", 102);
-                getActivity().startActivity(intent);
+                intent.putExtra(DetailFragment.DETAIL_URI, mUri);
+                startActivityForResult(intent, 110);
             }
         });
 
-//        Uri uri = mUri;
-//        if (null != uri) {
-//            String receiptId = MemoContract.MemoEntry.getReceiptIdFromUri(uri);
-//            Uri updatedUri = MemoContract.MemoEntry.buildMemoWithReceiptId(receiptId);
-//            mUri = updatedUri;
-//            getLoaderManager().restartLoader(DETAIL_LOADER, null, this);
-//        }
-
         return rootView;
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (data != null) {
+            mUri = data.getParcelableExtra(DetailFragment.DETAIL_URI);
+            getLoaderManager().restartLoader(DETAIL_LOADER, null, this);
+        }
     }
 
     @Override
@@ -152,7 +154,7 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
         super.onActivityCreated(savedInstanceState);
     }
 
-    void onLocationChanged( String newLocation ) {
+    void onLocationChanged(String newLocation) {
         // replace the uri, since the location has changed
 //        Uri uri = mUri;
 //        if (null != uri) {
@@ -161,6 +163,7 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
 //            mUri = updatedUri;
 //            getLoaderManager().restartLoader(DETAIL_LOADER, null, this);
 //        }
+        getLoaderManager().restartLoader(DETAIL_LOADER, null, this);
     }
 
     @Override
