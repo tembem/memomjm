@@ -136,9 +136,9 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
                 Cursor cursor = (Cursor) adapterView.getItemAtPosition(position);
                 if (cursor != null) {
                     //String locationSetting = Utility.getPreferredLocation(getActivity());
-//                    ((Callback) getActivity())
-//                            .onItemSelected(MemoContract.MemoEntry.buildMemoLocation(cursor.getString(COL_MEMO_RECEIPT_ID)
-//                            ));
+                    ((Callback) getActivity())
+                            .onItemSelected(MemoContract.MemoEntry.buildMemoWithReceiptId(cursor.getString(COL_MEMO_RECEIPT_ID)
+                            ));
                 }
                 mPosition = position;
             }
@@ -201,8 +201,7 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
         String sortOrder = MemoContract.MemoEntry.COLUMN_DATE + " ASC";
 
         String locationSetting = Utility.getPreferredLocation(getActivity());
-        Uri weatherForLocationUri = MemoContract.MemoEntry.buildMemoLocation(
-                locationSetting);
+        Uri weatherForLocationUri = MemoContract.MemoEntry.buildMemo();
 
         return new CursorLoader(getActivity(),
                 weatherForLocationUri,

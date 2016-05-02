@@ -59,8 +59,11 @@ public class MemoContract {
         public static final Uri CONTENT_URI =
                 BASE_CONTENT_URI.buildUpon().appendPath(PATH_MEMO).build();
 
+        // URI containing a Cursor of zero or more items
         public static final String CONTENT_TYPE =
                 ContentResolver.CURSOR_DIR_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_MEMO;
+
+        // URI containing a Cursor of a single item
         public static final String CONTENT_ITEM_TYPE =
                 ContentResolver.CURSOR_ITEM_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_MEMO;
 
@@ -81,11 +84,15 @@ public class MemoContract {
             return ContentUris.withAppendedId(CONTENT_URI, id);
         }
 
-        public static Uri buildMemoLocation(String locationSetting) {
-            return CONTENT_URI.buildUpon().appendPath(locationSetting).build();
+        public static Uri buildMemo() {
+            return CONTENT_URI.buildUpon().build();
         }
 
-        public static String getLocationSettingFromUri(Uri uri) {
+        public static Uri buildMemoWithReceiptId(String receiptId) {
+            return CONTENT_URI.buildUpon().appendPath(receiptId).build();
+        }
+
+        public static String getReceiptIdFromUri(Uri uri) {
             return uri.getPathSegments().get(1);
         }
     }

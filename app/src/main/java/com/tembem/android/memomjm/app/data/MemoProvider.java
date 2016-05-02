@@ -31,29 +31,28 @@ public class MemoProvider extends ContentProvider {
     private MemoDbHelper mOpenHelper;
 
     static final int MEMO = 100;
-    static final int MEMO_WITH_LOCATION = 101;
+    static final int MEMO_WITH_RECEIPT_ID = 101;
 
-    private static final SQLiteQueryBuilder sWeatherByLocationSettingQueryBuilder;
+    private static final SQLiteQueryBuilder sMemoByReceiptIdQueryBuilder;
 
     static {
-        sWeatherByLocationSettingQueryBuilder = new SQLiteQueryBuilder();
+        sMemoByReceiptIdQueryBuilder = new SQLiteQueryBuilder();
+        sMemoByReceiptIdQueryBuilder.setTables(MemoContract.MemoEntry.TABLE_NAME);
     }
 
-    //location.location_setting = ?
-    private static final String sLocationSettingSelection =
-            MemoContract.MemoEntry.TABLE_NAME+
-                    "." + MemoContract.MemoEntry.COLUMN_RECEIPT_ID + " = ? ";
+    private static final String sReceiptSelection = MemoContract.MemoEntry.COLUMN_RECEIPT_ID + " = ? ";
 
-    private Cursor getMemoByLocationSetting(Uri uri, String[] projection, String sortOrder) {
-        String locationSetting = MemoContract.MemoEntry.getLocationSettingFromUri(uri);
+    // Cari memo dengan receipt_id (waktu klik list item memo-memo)
+    private Cursor getMemoByReceiptId(Uri uri, String[] projection, String sortOrder) {
+        String receiptId = MemoContract.MemoEntry.getReceiptIdFromUri(uri);
 
         String[] selectionArgs;
         String selection;
 
-        selection = sLocationSettingSelection;
-        selectionArgs = new String[]{locationSetting};
+        selection = sReceiptSelection;
+        selectionArgs = new String[]{ receiptId };
 
-        return sWeatherByLocationSettingQueryBuilder.query(mOpenHelper.getReadableDatabase(),
+        return sMemoByReceiptIdQueryBuilder.query(mOpenHelper.getReadableDatabase(),
                 projection,
                 selection,
                 selectionArgs,
@@ -81,26 +80,17 @@ public class MemoProvider extends ContentProvider {
 
         // For each type of URI you want to add, create a corresponding code.
         matcher.addURI(authority, MemoContract.PATH_MEMO, MEMO);
-        matcher.addURI(authority, MemoContract.PATH_MEMO + "/*", MEMO_WITH_LOCATION);
+        matcher.addURI(authority, MemoContract.PATH_MEMO + "/*", MEMO_WITH_RECEIPT_ID);
 
         return matcher;
     }
 
-    /*
-        Students: We've coded this for you.  We just create a new WeatherDbHelper for later use
-        here.
-     */
     @Override
     public boolean onCreate() {
         mOpenHelper = new MemoDbHelper(getContext());
         return true;
     }
 
-    /*
-        Students: Here's where you'll code the getType function that uses the UriMatcher.  You can
-        test this by uncommenting testGetType in TestProvider.
-
-     */
     @Override
     public String getType(Uri uri) {
 
@@ -108,10 +98,10 @@ public class MemoProvider extends ContentProvider {
         final int match = sUriMatcher.match(uri);
 
         switch (match) {
-            case MEMO_WITH_LOCATION:
-                return MemoContract.MemoEntry.CONTENT_TYPE;
             case MEMO:
                 return MemoContract.MemoEntry.CONTENT_TYPE;
+            case MEMO_WITH_RECEIPT_ID:
+                return MemoContract.MemoEntry.CONTENT_ITEM_TYPE;
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
         }
@@ -124,20 +114,6 @@ public class MemoProvider extends ContentProvider {
         // and query the database accordingly.
         Cursor retCursor;
         switch (sUriMatcher.match(uri)) {
-            // "memo/*"
-            case MEMO_WITH_LOCATION: {
-                //retCursor = getMemoByLocationSetting(uri, projection, sortOrder);
-                retCursor = mOpenHelper.getReadableDatabase().query(
-                        MemoContract.MemoEntry.TABLE_NAME,
-                        projection,
-                        selection,
-                        selectionArgs,
-                        null,
-                        null,
-                        sortOrder
-                );
-                break;
-            }
 
             // "memo"
             case MEMO: {
@@ -150,6 +126,12 @@ public class MemoProvider extends ContentProvider {
                         null,
                         sortOrder
                 );
+                break;
+            }
+
+            // "memo/*"
+            case MEMO_WITH_RECEIPT_ID: {
+                retCursor = getMemoByReceiptId(uri, projection, sortOrder);
                 break;
             }
 
