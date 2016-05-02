@@ -27,7 +27,7 @@ import com.tembem.android.memomjm.app.data.MemoContract.MemoEntry;
 public class MemoDbHelper extends SQLiteOpenHelper {
 
     // If you change the database schema, you must increment the database version.
-    private static final int DATABASE_VERSION = 1;
+    private static final int DATABASE_VERSION = 2;
 
     static final String DATABASE_NAME = "memo.db";
 
@@ -52,7 +52,7 @@ public class MemoDbHelper extends SQLiteOpenHelper {
                 MemoEntry.COLUMN_SHORT_DESC + " TEXT NOT NULL, " +
                 MemoEntry.COLUMN_ENGINE + " TEXT NOT NULL," +
                 MemoEntry.COLUMN_CHASIS + " TEXT NOT NULL," +
-                MemoEntry.COLUMN_IMAGE1 + " TEXT NOT NULL," +
+                MemoEntry.COLUMN_IMAGE1 + " TEXT NOT NULL" +
 
                 ");";
 

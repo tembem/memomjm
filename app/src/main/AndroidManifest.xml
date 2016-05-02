@@ -38,6 +38,10 @@
                 android:value="com.tembem.android.memomjm.app.MainActivity" />
         </activity>
 
+        <provider
+            android:authorities="com.tembem.android.memomjm.app"
+            android:name=".data.MemoProvider" />
+
     </application>
 
 </manifest>

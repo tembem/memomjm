@@ -101,7 +101,7 @@ public class ForecastAdapter extends CursorAdapter {
         String chasis = cursor.getString(ForecastFragment.COL_MEMO_CHASIS);
         viewHolder.chasisView.setText(chasis);
 
-        String image1 = cursor.getString(ForecastFragment.COL_MEMO_IMAGE1);
-        viewHolder.engineView.setText(image1);
+        //String image1 = cursor.getString(ForecastFragment.COL_MEMO_IMAGE1);
+        //viewHolder.engineViewView.setText(image1);
     }
 }

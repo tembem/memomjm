@@ -44,7 +44,7 @@ public class MemoProvider extends ContentProvider {
             MemoContract.MemoEntry.TABLE_NAME+
                     "." + MemoContract.MemoEntry.COLUMN_RECEIPT_ID + " = ? ";
 
-    private Cursor getWeatherByLocationSetting(Uri uri, String[] projection, String sortOrder) {
+    private Cursor getMemoByLocationSetting(Uri uri, String[] projection, String sortOrder) {
         String locationSetting = MemoContract.MemoEntry.getLocationSettingFromUri(uri);
 
         String[] selectionArgs;
@@ -126,7 +126,30 @@ public class MemoProvider extends ContentProvider {
         switch (sUriMatcher.match(uri)) {
             // "memo/*"
             case MEMO_WITH_LOCATION: {
-                retCursor = getWeatherByLocationSetting(uri, projection, sortOrder);
+                //retCursor = getMemoByLocationSetting(uri, projection, sortOrder);
+                retCursor = mOpenHelper.getReadableDatabase().query(
+                        MemoContract.MemoEntry.TABLE_NAME,
+                        projection,
+                        selection,
+                        selectionArgs,
+                        null,
+                        null,
+                        sortOrder
+                );
+                break;
+            }
+
+            // "memo"
+            case MEMO: {
+                retCursor = mOpenHelper.getReadableDatabase().query(
+                        MemoContract.MemoEntry.TABLE_NAME,
+                        projection,
+                        selection,
+                        selectionArgs,
+                        null,
+                        null,
+                        sortOrder
+                );
                 break;
             }
 
@@ -219,6 +242,9 @@ public class MemoProvider extends ContentProvider {
         switch (match) {
             case MEMO:
                 db.beginTransaction();
+
+                db.delete(MemoContract.MemoEntry.TABLE_NAME, null, null);
+
                 int returnCount = 0;
                 try {
                     for (ContentValues value : values) {
@@ -236,6 +262,7 @@ public class MemoProvider extends ContentProvider {
                 return returnCount;
             default:
                 return super.bulkInsert(uri, values);
+                //throw new UnsupportedOperationException("Unknown bulk insert: " + uri);
         }
     }
 

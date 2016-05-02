@@ -178,7 +178,7 @@ public class FetchMemoTask extends AsyncTask<String, Void, Void> {
             // Construct the URL for the OpenWeatherMap query
             // Possible parameters are avaiable at OWM's forecast API page, at
             final String FORECAST_BASE_URL =
-                    "http://som/api/memo?";
+                    "http://192.168.1.3/memo/api.php?";
 
             final String RECEIPT_PARAM = "receiptid";
 
