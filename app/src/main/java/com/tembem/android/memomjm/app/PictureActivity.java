@@ -1,5 +1,6 @@
 package com.tembem.android.memomjm.app;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.ContentValues;
 import android.content.Intent;
@@ -9,8 +10,8 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.provider.MediaStore;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -32,7 +33,7 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-public class PictureActivity extends AppCompatActivity {
+public class PictureActivity extends ActionBarActivity {
     private Button buttonChoose;
     private Button buttonUpload;
     private ImageView imageView;
@@ -77,6 +78,8 @@ public class PictureActivity extends AppCompatActivity {
                             uploadFile1(imagePath);
                         }
                     }).start();
+                } else {
+                    Toast.makeText(getApplicationContext(), "Please choose image first", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -99,7 +102,8 @@ public class PictureActivity extends AppCompatActivity {
             } else if (Build.VERSION.SDK_INT < 19) {
                 imagePath = RealPathUtil.getRealPathFromURI_API11to18(this, filePath);
             } else {
-                imagePath = RealPathUtil.getRealPathFromURI_API19(this, filePath);
+                //imagePath = RealPathUtil.getRealPathFromURI_API19(this, filePath);
+                imagePath = RealPathUtil.getRealPathFromURI_API23(this, filePath);
             }
             Log.d("INFO", "PATH == " + imagePath);
 

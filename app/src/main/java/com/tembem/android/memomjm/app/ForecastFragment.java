@@ -109,7 +109,7 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
             @Override
             public boolean onQueryTextSubmit(String query) {
                 //Toast.makeText(getActivity(), "Search for: " + query, Toast.LENGTH_SHORT).show();
-                Utility.setPreferredKeyword(getContext(), query);
+                Utility.setPreferredKeyword(getActivity(), query);
                 updateMemo();
                 searchView.clearFocus();
                 return true;
@@ -196,7 +196,7 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
     }
 
     private void updateMemo() {
-        String keyword = Utility.getPreferredKeyword(getContext());
+        String keyword = Utility.getPreferredKeyword(getActivity());
         if (keyword != "") {
             FetchMemoTask weatherTask = new FetchMemoTask(getActivity());
             weatherTask.execute(keyword);

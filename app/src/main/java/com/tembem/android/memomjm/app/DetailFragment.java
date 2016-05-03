@@ -15,6 +15,11 @@
  */
 package com.tembem.android.memomjm.app;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+import android.animation.AnimatorSet;
+import android.animation.ObjectAnimator;
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.ContentValues;
@@ -23,6 +28,10 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
+import android.graphics.Point;
+import android.graphics.PointF;
+import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -32,15 +41,17 @@ import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v4.view.MenuItemCompat;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.ShareActionProvider;
+import android.util.FloatMath;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.DecelerateInterpolator;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -124,8 +135,8 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
         mEngineView = (TextView) rootView.findViewById(R.id.detail_engine_textview);
         mChasisView = (TextView) rootView.findViewById(R.id.detail_chasis_textview);
 
-        ImageView imageView1 = (ImageView) rootView.findViewById(R.id.thumbnail_image1);
-        imageView1.setOnClickListener(new View.OnClickListener() {
+        Button add1 = (Button) rootView.findViewById(R.id.button_add_image1);
+        add1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), PictureActivity.class);
@@ -303,7 +314,7 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            dialog2 = new ProgressDialog(getContext());
+            dialog2 = new ProgressDialog(getActivity());
             dialog2.setMessage("Loading Image ....");
             dialog2.show();
         }
@@ -323,6 +334,8 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
             } else {
                 int id = getResources().getIdentifier("com.tembem.android.memomjm.app:drawable/" + "ic_add_a_photo_black", null, null);
                 imageView.setImageResource(id);
+
+                bitmap = null;
             }
 
             if (dialog2.isShowing()) {
@@ -337,7 +350,7 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            deleteDialog = new ProgressDialog(getContext());
+            deleteDialog = new ProgressDialog(getActivity());
             deleteDialog.setMessage("Delete image ....");
             deleteDialog.show();
         }
@@ -384,13 +397,14 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
             String[] selectionArgs = new String[]{ receiptId };
             ContentValues contentValues = new ContentValues();
             contentValues.put(MemoEntry.COLUMN_IMAGE1, "");
-            getContext().getContentResolver().update(MemoEntry.CONTENT_URI, contentValues, selection, selectionArgs);
+            getActivity().getContentResolver().update(MemoEntry.CONTENT_URI, contentValues, selection, selectionArgs);
 
             getLoaderManager().restartLoader(DETAIL_LOADER, null, DetailFragment.this);
 
             ImageView image1 = (ImageView)getActivity().findViewById(R.id.thumbnail_image1);
             int id = getResources().getIdentifier("com.tembem.android.memomjm.app:drawable/" + "ic_add_a_photo_black", null, null);
             image1.setImageResource(id);
+            bitmap = null;
 
             //Toast.makeText(getActivity(), "Image is deleted", Toast.LENGTH_SHORT).show();
             if (deleteDialog.isShowing()) {

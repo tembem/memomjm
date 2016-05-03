@@ -45,16 +45,31 @@
         <ImageView
             android:id="@+id/thumbnail_image1"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="fill_parent"
+            android:adjustViewBounds="true"
             android:layout_gravity="center"
             android:layout_marginTop="16dp"
             android:src="@drawable/ic_add_a_photo_black" />
 
-        <Button
-            android:layout_width="match_parent"
+        <LinearLayout
             android:layout_height="wrap_content"
-            android:text="Delete Image 1"
-            android:id="@+id/button_del_image1" />
+            android:layout_width="match_parent"
+            android:orientation="horizontal"
+            android:padding="5dp">
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="ADD Image 1"
+                android:layout_weight="1"
+                android:id="@+id/button_add_image1" />
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Delete Image 1"
+                android:layout_weight="1"
+                android:id="@+id/button_del_image1" />
+        </LinearLayout>
+
 
     </LinearLayout>
 </ScrollView>
