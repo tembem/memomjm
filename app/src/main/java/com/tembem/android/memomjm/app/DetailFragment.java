@@ -23,6 +23,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -264,7 +265,7 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
             mEngineView.setText(engine);
 
             String image1File = data.getString(COL_MEMO_IMAGE1);
-            if (image1File != null) {
+            if (image1File != null && !image1File.equals("") && !image1File.equals("null")) {
                 ImageView image1 = (ImageView)getActivity().findViewById(R.id.thumbnail_image1);
                 Log.d(LOG_TAG, "Image file path: " + Utility.MJM_IMAGE_URL + image1File);
                 loadImage(Utility.MJM_IMAGE_URL + image1File, image1);
@@ -311,16 +312,16 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
             return bitmap;
         }
         protected void onPostExecute(Bitmap image) {
-            if(imageViewReference != null && image != null) {
-                final ImageView imageView = imageViewReference.get();
-                if (imageView != null) {
-                    imageView.setImageBitmap(image);
-                }
-                dialog2.dismiss();
+            final ImageView imageView = imageViewReference.get();
+
+            if (image != null) {
+                imageView.setImageBitmap(image);
             } else {
-                dialog2.dismiss();
-                Toast.makeText(getActivity(), "Image Does Not exist or Network Error", Toast.LENGTH_SHORT).show();
+                int id = getResources().getIdentifier("com.tembem.android.memomjm.app:drawable/" + "ic_add_a_photo_black", null, null);
+                imageView.setImageResource(id);
             }
+
+            dialog2.dismiss();
         }
     }
 
@@ -372,15 +373,18 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
 
-            /*
             String receiptId = MemoContract.MemoEntry.getReceiptIdFromUri(mUri);
             String selection = MemoContract.MemoEntry.COLUMN_RECEIPT_ID + " = ? ";
             String[] selectionArgs = new String[]{ receiptId };
             ContentValues contentValues = new ContentValues();
             contentValues.put(MemoEntry.COLUMN_IMAGE1, "");
             getContext().getContentResolver().update(MemoEntry.CONTENT_URI, contentValues, selection, selectionArgs);
-            */
+
             getLoaderManager().restartLoader(DETAIL_LOADER, null, DetailFragment.this);
+
+            ImageView image1 = (ImageView)getActivity().findViewById(R.id.thumbnail_image1);
+            int id = getResources().getIdentifier("com.tembem.android.memomjm.app:drawable/" + "ic_add_a_photo_black", null, null);
+            image1.setImageResource(id);
 
             //Toast.makeText(getActivity(), "Image is deleted", Toast.LENGTH_SHORT).show();
             deleteDialog.dismiss();

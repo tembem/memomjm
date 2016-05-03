@@ -1,6 +1,7 @@
 package com.tembem.android.memomjm.app;
 
 import android.app.ProgressDialog;
+import android.content.ContentValues;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -72,7 +73,7 @@ public class PictureActivity extends AppCompatActivity {
 
                 new Thread(new Runnable() {
                     public void run() {
-                        uploadFile(imagePath);
+                        uploadFile1(imagePath);
                     }
                 }).start();
             }
@@ -109,7 +110,7 @@ public class PictureActivity extends AppCompatActivity {
         }
     }
 
-    public int uploadFile(String sourceFileUri) {
+    public int uploadFile1(String sourceFileUri) {
         // Inject receiptId to filename, then php server parse with correct pattern
         String receiptId = MemoContract.MemoEntry.getReceiptIdFromUri(mUri);
         String fileName = receiptId + sourceFileUri.substring(sourceFileUri.lastIndexOf("."));
@@ -189,6 +190,12 @@ public class PictureActivity extends AppCompatActivity {
                         }
                     });
                 }
+
+                String selection = MemoContract.MemoEntry.COLUMN_RECEIPT_ID + " = ? ";
+                String[] selectionArgs = new String[]{ receiptId };
+                ContentValues contentValues = new ContentValues();
+                contentValues.put(MemoContract.MemoEntry.COLUMN_IMAGE1, receiptId + "-1" + sourceFileUri.substring(sourceFileUri.lastIndexOf(".")));
+                getApplicationContext().getContentResolver().update(MemoContract.MemoEntry.CONTENT_URI, contentValues, selection, selectionArgs);
 
                 fileInputStream.close();
                 dos.flush();
