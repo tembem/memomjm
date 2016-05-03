@@ -109,7 +109,8 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
             @Override
             public boolean onQueryTextSubmit(String query) {
                 //Toast.makeText(getActivity(), "Search for: " + query, Toast.LENGTH_SHORT).show();
-                updateMemo(query);
+                Utility.setPreferredKeyword(getContext(), query);
+                updateMemo();
                 searchView.clearFocus();
                 return true;
             }
@@ -129,7 +130,7 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
         if (id == R.id.action_refresh) {
-            updateMemo("");
+            updateMemo();
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -190,11 +191,12 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
 
     // since we read the location when we create the loader, all we need to do is restart things
     void onLocationChanged( ) {
-        updateMemo("");
+        updateMemo();
         getLoaderManager().restartLoader(FORECAST_LOADER, null, this);
     }
 
-    private void updateMemo(String keyword) {
+    private void updateMemo() {
+        String keyword = Utility.getPreferredKeyword(getContext());
         if (keyword != "") {
             FetchMemoTask weatherTask = new FetchMemoTask(getActivity());
             weatherTask.execute(keyword);

@@ -17,6 +17,7 @@ package com.tembem.android.memomjm.app;
 
 import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
@@ -370,6 +371,17 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
         @Override
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
+
+            /*
+            String receiptId = MemoContract.MemoEntry.getReceiptIdFromUri(mUri);
+            String selection = MemoContract.MemoEntry.COLUMN_RECEIPT_ID + " = ? ";
+            String[] selectionArgs = new String[]{ receiptId };
+            ContentValues contentValues = new ContentValues();
+            contentValues.put(MemoEntry.COLUMN_IMAGE1, "");
+            getContext().getContentResolver().update(MemoEntry.CONTENT_URI, contentValues, selection, selectionArgs);
+            */
+            getLoaderManager().restartLoader(DETAIL_LOADER, null, DetailFragment.this);
+
             //Toast.makeText(getActivity(), "Image is deleted", Toast.LENGTH_SHORT).show();
             deleteDialog.dismiss();
         }

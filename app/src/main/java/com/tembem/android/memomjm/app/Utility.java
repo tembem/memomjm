@@ -34,6 +34,19 @@ public class Utility {
                 context.getString(R.string.pref_location_default));
     }
 
+    public static String setPreferredKeyword(Context context, String value) {
+        SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(context).edit();
+        editor.putString("keyword", value);
+        editor.apply();
+
+        return value;
+    }
+
+    public static String getPreferredKeyword(Context context) {
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+        return prefs.getString("keyword", "");
+    }
+
     public static int getIconResourceForWeatherCondition() {
         return R.drawable.ic_clear;
     }
