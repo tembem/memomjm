@@ -15,7 +15,9 @@
  */
 package com.tembem.android.memomjm.app;
 
+import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -28,6 +30,7 @@ import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v4.view.MenuItemCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.ShareActionProvider;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -45,8 +48,12 @@ import com.tembem.android.memomjm.app.data.MemoContract;
 import com.tembem.android.memomjm.app.data.MemoContract.MemoEntry;
 
 import java.io.InputStream;
+import java.io.OutputStreamWriter;
 import java.lang.ref.WeakReference;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLConnection;
 
 /**
  * A placeholder fragment containing a simple view.
@@ -119,6 +126,39 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
                 Intent intent = new Intent(getActivity(), PictureActivity.class);
                 intent.putExtra(DetailFragment.DETAIL_URI, mUri);
                 startActivityForResult(intent, 110);
+            }
+        });
+
+        Button del1 = (Button)rootView.findViewById(R.id.button_del_image1);
+        del1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AlertDialog.Builder builder1 = new AlertDialog.Builder(getActivity());
+                builder1.setMessage("Do you want to remove this image?");
+                builder1.setCancelable(true);
+
+                builder1.setPositiveButton(
+                        "Yes",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                String receiptId = MemoContract.MemoEntry.getReceiptIdFromUri(mUri);
+                                String url = Utility.MJM_API_URL + "memo1del/" + receiptId;
+                                DeleteWorkerTask worker = new DeleteWorkerTask();
+                                worker.execute(url);
+                                dialog.dismiss();
+                            }
+                        });
+
+                builder1.setNegativeButton(
+                        "No",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                dialog.cancel();
+                            }
+                        });
+
+                AlertDialog alert11 = builder1.create();
+                alert11.show();
             }
         });
 
@@ -280,6 +320,58 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
                 dialog2.dismiss();
                 Toast.makeText(getActivity(), "Image Does Not exist or Network Error", Toast.LENGTH_SHORT).show();
             }
+        }
+    }
+
+    private class DeleteWorkerTask extends AsyncTask<String, String, String> {
+        private ProgressDialog deleteDialog;
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            deleteDialog = new ProgressDialog(getActivity());
+            deleteDialog.setMessage("Delete image ....");
+            deleteDialog.show();
+        }
+
+        @Override
+        protected String doInBackground(String... params) {
+            String urlString = params[0];
+
+            try {
+                URL url = new URL(urlString);
+                HttpURLConnection conn = (HttpURLConnection)url.openConnection();
+                conn.setDoOutput(true);
+                OutputStreamWriter wr = new OutputStreamWriter(conn.getOutputStream());
+
+                int response = conn.getResponseCode();
+                final String responseMessage = conn.getResponseMessage();
+
+                Log.i("DeleteWorkerTask", "HTTP Response is : " + response + " " + responseMessage);
+
+                if (response == 200) {
+                    getActivity().runOnUiThread(new Runnable() {
+                        public void run() {
+                            Toast.makeText(getActivity(), "Image is deleted", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                }
+
+                wr.flush();
+                wr.close();
+
+            } catch (Exception e) {
+                Log.i("DeleteWorkerTask", "Failed to delete " + urlString);
+            }
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            super.onPostExecute(s);
+            //Toast.makeText(getActivity(), "Image is deleted", Toast.LENGTH_SHORT).show();
+            deleteDialog.dismiss();
         }
     }
 }
