@@ -23,6 +23,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.text.format.Time;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.tembem.android.memomjm.app.data.MemoContract;
 import com.tembem.android.memomjm.app.data.MemoContract.MemoEntry;
@@ -145,6 +146,8 @@ public class FetchMemoTask extends AsyncTask<String, Void, Void> {
                 ContentValues[] cvArray = new ContentValues[cVVector.size()];
                 cVVector.toArray(cvArray);
                 inserted = mContext.getContentResolver().bulkInsert(MemoEntry.CONTENT_URI, cvArray);
+            } else {
+                mContext.getContentResolver().delete(MemoEntry.CONTENT_URI, null, null);
             }
 
             Log.d(LOG_TAG, "FetchMemoTask Complete. " + inserted + " Inserted");
