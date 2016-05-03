@@ -69,13 +69,15 @@ public class PictureActivity extends AppCompatActivity {
         buttonUpload.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                dialog = ProgressDialog.show(PictureActivity.this, "", "Uploading file...", true);
+                if (imagePath != null) {
+                    dialog = ProgressDialog.show(PictureActivity.this, "", "Uploading file...", true);
 
-                new Thread(new Runnable() {
-                    public void run() {
-                        uploadFile1(imagePath);
-                    }
-                }).start();
+                    new Thread(new Runnable() {
+                        public void run() {
+                            uploadFile1(imagePath);
+                        }
+                    }).start();
+                }
             }
         });
 

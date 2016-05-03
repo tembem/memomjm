@@ -70,8 +70,11 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
     private ShareActionProvider mShareActionProvider;
     private String mForecast;
     private Uri mUri;
-    ProgressDialog dialog2 = null;
+
     private Bitmap bitmap;
+
+    private ProgressDialog deleteDialog;
+    private ProgressDialog dialog2 = null;
 
     private static final int DETAIL_LOADER = 0;
 
@@ -121,8 +124,8 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
         mEngineView = (TextView) rootView.findViewById(R.id.detail_engine_textview);
         mChasisView = (TextView) rootView.findViewById(R.id.detail_chasis_textview);
 
-        Button button1 = (Button)rootView.findViewById(R.id.button_show_image1);
-        button1.setOnClickListener(new View.OnClickListener() {
+        ImageView imageView1 = (ImageView) rootView.findViewById(R.id.thumbnail_image1);
+        imageView1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), PictureActivity.class);
@@ -291,6 +294,7 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
     private class BitmapWorkerTask extends AsyncTask<String, String, Bitmap> {
         private final WeakReference<ImageView> imageViewReference;
 
+
         public BitmapWorkerTask(ImageView imageView) {
             // Use a WeakReference to ensure the ImageView can be garbage collected
             imageViewReference = new WeakReference<ImageView>(imageView);
@@ -299,7 +303,7 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            dialog2 = new ProgressDialog(getActivity());
+            dialog2 = new ProgressDialog(getContext());
             dialog2.setMessage("Loading Image ....");
             dialog2.show();
         }
@@ -321,17 +325,19 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
                 imageView.setImageResource(id);
             }
 
-            dialog2.dismiss();
+            if (dialog2.isShowing()) {
+                dialog2.dismiss();
+            }
         }
     }
 
     private class DeleteWorkerTask extends AsyncTask<String, String, String> {
-        private ProgressDialog deleteDialog;
+
 
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            deleteDialog = new ProgressDialog(getActivity());
+            deleteDialog = new ProgressDialog(getContext());
             deleteDialog.setMessage("Delete image ....");
             deleteDialog.show();
         }
@@ -387,7 +393,21 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
             image1.setImageResource(id);
 
             //Toast.makeText(getActivity(), "Image is deleted", Toast.LENGTH_SHORT).show();
+            if (deleteDialog.isShowing()) {
+                deleteDialog.dismiss();
+            }
+        }
+    }
+
+    @Override
+    public void onDestroy() {
+        if (dialog2 != null && dialog2.isShowing()) {
+            dialog2.dismiss();
+        }
+
+        if (deleteDialog != null && deleteDialog.isShowing()) {
             deleteDialog.dismiss();
         }
+        super.onDestroy();
     }
 }
